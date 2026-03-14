@@ -1,0 +1,4 @@
+﻿User-agent: *
+Allow: /
+
+Sitemap: https://nawada-parsauni.vercel.app/sitemap.xml

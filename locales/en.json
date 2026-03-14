@@ -1,0 +1,35 @@
+{
+    "dir":  "ltr",
+    "locale":  "en",
+    "strings":  {
+
+                },
+    "messages":  {
+                     "langLabel":  "Select language",
+                     "switchDark":  "Switch to dark mode",
+                     "switchLight":  "Switch to light mode",
+                     "installApp":  "Install App",
+                     "installAppAria":  "Install this app",
+                     "showingCount":  "Showing {count} {itemLabel}",
+                     "itemSingle":  "item",
+                     "itemPlural":  "items",
+                     "pdfMissing":  "PDF generator is not loaded. Please refresh and try again.",
+                     "pdfTitle":  "Village Notice Board",
+                     "pdfHeader":  "Nawada Parsauni | UchkaGaon | Gopalganj | Bihar",
+                     "pdfDate":  "Date: {date}",
+                     "pdfAdditional":  "Additional Information:",
+                     "pdfFooter":  "Generated from Nawada Parsauni Community Portal",
+                     "formBlocked":  "Request blocked.",
+                     "formWait":  "Please wait {seconds} seconds before sending another request.",
+                     "formUnavailable":  "Form is unavailable right now. Please reload the page.",
+                     "formNameError":  "Please enter your full name (at least 3 characters).",
+                     "formMobileError":  "Please enter a valid 10-digit mobile number.",
+                     "formMessageError":  "Please enter a detailed message (minimum 15 characters).",
+                     "formSubmitting":  "Submitting your request...",
+                     "formSuccess":  "Request submitted successfully.",
+                     "formFailure":  "Could not send right now. Please try again after a short wait.",
+                     "cookieText":  "We use cookies and local analytics to improve this village portal. \u003ca href=\"privacy.html\"\u003ePrivacy Policy\u003c/a\u003e",
+                     "cookieAccept":  "Accept",
+                     "lastUpdatedPrefix":  "Last updated:"
+                 }
+}

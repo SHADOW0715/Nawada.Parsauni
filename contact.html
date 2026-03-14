@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Contact, verification and correction request page for Nawada Parsauni community portal." />
+  <meta name="keywords" content="Nawada Parsauni contact, Gram Panchayat update form, UchkaGaon verification" />
+  <meta name="author" content="Nawada Parsauni Community Portal" />
+  <meta name="theme-color" content="#1f3b2d" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Contact and Verification | Nawada Parsauni" />
+  <meta property="og:description" content="Contact, verification and correction request page for Nawada Parsauni community portal." />
+  <meta property="og:url" content="https://nawada-parsauni.vercel.app/contact.html" />
+  <title>Contact and Verification | Nawada Parsauni</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-BCLMPK5JNB"></script>
+  <script defer src="analytics.js"></script>
+</head>
+<body class="page-shell loaded">
+  <header class="site-header scrolled">
+    <nav class="navbar container" aria-label="Main navigation">
+      <a class="brand" href="index.html">
+        <img class="brand-mark" src="icons/icon-192.png" alt="Nawada Parsauni logo" />
+        <span class="brand-text">Nawada Parsauni</span>
+      </a>
+      <ul class="nav-links sub-nav">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="datasource.html">Data Source</a></li>
+        <li><a href="disclaimer.html">Disclaimer</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="page-content">
+    <section class="section reveal">
+      <div class="container">
+        <h1>Contact & Verification</h1>
+        <p class="section-intro">
+          Submit requests for profile updates, correction requests, Panchayat verification details,
+          and community coordination messages for Nawada Parsauni.
+        </p>
+
+        <div class="contact-layout">
+          <article class="glass-card contact-panel">
+            <h2>Village Contact Profile</h2>
+            <ul class="clean-list detail-list">
+              <li><strong>Village:</strong> Nawada Parsauni</li>
+              <li><strong>Block:</strong> UchkaGaon</li>
+              <li><strong>District:</strong> Gopalganj</li>
+              <li><strong>State:</strong> Bihar</li>
+            </ul>
+            <h3>Purpose of This Page</h3>
+            <ul class="clean-list">
+              <li>Profile updates</li>
+              <li>Correction requests</li>
+              <li>Panchayat verification details</li>
+              <li>Community coordination messages</li>
+            </ul>
+            <p class="disclaimer-note">
+              This is a community informational portal. It is not an official government website.
+            </p>
+            <p class="disclaimer-note">This portal is non-political and has no party affiliation.</p>
+          </article>
+
+          <article class="glass-card form-card">
+            <h2>Submit Request</h2>
+            <form
+              id="contactRequestForm"
+              action="https://formsubmit.co/infonawadaparsauni@gmail.com"
+              method="POST"
+              data-email-target="infonawadaparsauni@gmail.com"
+              novalidate
+            >
+              <input type="hidden" name="_captcha" value="false" />
+              <input type="hidden" name="_subject" value="Nawada Parsauni - Contact & Verification Request" />
+              <input type="hidden" name="_template" value="table" />
+
+              <div class="hp-field" aria-hidden="true">
+                <label for="websiteField">Website</label>
+                <input id="websiteField" name="_website" type="text" tabindex="-1" autocomplete="off" />
+              </div>
+
+              <div class="field">
+                <label for="fullName">Full Name <span aria-hidden="true">*</span></label>
+                <input id="fullName" name="full_name" type="text" required autocomplete="name" minlength="3" maxlength="80" />
+              </div>
+
+              <div class="field">
+                <label for="mobileNumber">Mobile Number <span aria-hidden="true">*</span></label>
+                <input id="mobileNumber" name="mobile_number" type="tel" inputmode="numeric" pattern="[6-9][0-9]{9}" maxlength="10" required autocomplete="tel-national" />
+              </div>
+
+              <div class="field">
+                <label for="requestType">Request Type <span aria-hidden="true">*</span></label>
+                <select id="requestType" name="request_type" required>
+                  <option value="">Select Request Type</option>
+                  <option value="Profile Update">Profile Update</option>
+                  <option value="Correction Request">Correction Request</option>
+                  <option value="Panchayat Verification">Panchayat Verification</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label for="message">Message <span aria-hidden="true">*</span></label>
+                <textarea id="message" name="message" rows="5" required minlength="15" maxlength="1200"></textarea>
+              </div>
+
+              <button class="btn btn-primary submit-btn" type="submit">Submit Request</button>
+              <p id="formStatus" class="form-status" aria-live="polite"></p>
+            </form>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <h3>Nawada Parsauni Portal</h3>
+        <p>This is a community informational portal and not an official government website.</p>
+        <p>This portal is non-political and has no party affiliation.</p>
+      </div>
+      <div>
+        <h4>Quick Links</h4>
+        <ul class="clean-list">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="datasource.html">Data Source</a></li>
+          <li><a href="disclaimer.html">Disclaimer</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Updates</h4>
+        <p>Last updated: <span id="lastUpdated">March 2, 2026</span></p>
+        <p>&copy; <span id="year"></span> Nawada Parsauni Community.</p>
+      </div>
+    </div>
+      <p class="analytics-note container">This website uses analytics to improve user experience. No personal data is stored.</p>
+  </footer>
+  <script src="script.js"></script>
+</body>
+</html>
+
+
+
+
+

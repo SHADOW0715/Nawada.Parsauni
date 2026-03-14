@@ -1,0 +1,40 @@
+[
+  {
+    "name": "Maa Durga Kirana Store",
+    "category": "Shop",
+    "description": "Groceries, packaged food, and daily household essentials for nearby families.",
+    "contact": "+91 99555 01234",
+    "location": "Main Bazaar, Nawada Parsauni",
+    "photo": "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=900&q=60",
+    "photoAlt": "Maa Durga Kirana Store front",
+    "featured": true
+  },
+  {
+    "name": "Bright Future Public School",
+    "category": "School",
+    "description": "Primary to middle-level education with focus on foundational learning and discipline.",
+    "contact": "+91 98111 04567",
+    "location": "School Road, Manbodh Parsauni",
+    "photo": "https://images.unsplash.com/photo-1588072432836-e10032774350?auto=format&fit=crop&w=900&q=60",
+    "photoAlt": "Bright Future Public School building",
+    "featured": false
+  },
+  {
+    "name": "Shifa Health Clinic",
+    "category": "Medical",
+    "description": "General consultation, basic medicines, and first-aid support for routine health needs.",
+    "contact": "+91 98765 43210",
+    "location": "Near Panchayat Bhawan, Nawada Parsauni",
+    "featured": false
+  },
+  {
+    "name": "Star Electrical Service",
+    "category": "Service",
+    "description": "Home wiring, fan and light repairs, and inverter service support with local call-out response.",
+    "contact": "+91 98123 45678",
+    "location": "Ward 4, Nawada Parsauni",
+    "photo": "https://images.unsplash.com/photo-1581090700227-1e8e8f923f8c?auto=format&fit=crop&w=900&q=60",
+    "photoAlt": "Electric service technician at work",
+    "featured": false
+  }
+]

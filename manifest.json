@@ -1,0 +1,24 @@
+﻿{
+  "name": "Nawada Parsauni Community Portal",
+  "short_name": "Nawada NP",
+  "start_url": "/index.html",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f4f8f5",
+  "theme_color": "#1f3b2d",
+  "description": "Community portal for Nawada Parsauni, UchkaGaon Block, Gopalganj, Bihar.",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
