@@ -1,6 +1,6 @@
 (function () {
   // Replace with your real GA4 Measurement ID before production use.
-  var GA_MEASUREMENT_ID = "G-BCLMPK5JNB";
+  var GA_MEASUREMENT_ID = "G-DKXYLMYQXK";
 
   if (!GA_MEASUREMENT_ID || GA_MEASUREMENT_ID === "G-XXXXXXXXXX") {
     return;
