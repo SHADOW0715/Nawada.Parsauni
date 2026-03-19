@@ -157,6 +157,24 @@
   };
 
   const getSavedTheme = () => (localStorage.getItem(THEME_KEY) === "dark" ? "dark" : "light");
+  const runWhenIdle = (callback, timeout = 2000) => {
+    if ("requestIdleCallback" in window) {
+      requestIdleCallback(callback, { timeout });
+    } else {
+      setTimeout(callback, 1);
+    }
+  };
+
+  const ensureLocaleFonts = (lang) => {
+    if (!["hi", "ur"].includes(lang)) return;
+    if (document.getElementById("localeFonts")) return;
+    const link = document.createElement("link");
+    link.id = "localeFonts";
+    link.rel = "stylesheet";
+    link.href =
+      "https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600;700&family=Noto+Nastaliq+Urdu:wght@400;600;700&display=swap";
+    document.head.appendChild(link);
+  };
 
   const getLeadingAndTrailing = (value) => {
     const leading = (value.match(/^\s*/) || [""])[0];
@@ -342,6 +360,7 @@
   const applyLanguage = async (lang) => {
     const selected = supportedLanguages.has(lang) ? lang : DEFAULT_LANGUAGE;
     currentLanguage = selected;
+    ensureLocaleFonts(selected);
     currentLocale = await loadLocale(selected);
     currentStringMap = new Map();
     Object.entries(currentLocale?.strings || {}).forEach(([source, translated]) => {
@@ -452,46 +471,51 @@
     }
   };
 
-  window.addEventListener("load", () => {
-    body.classList.add("loaded");
-  });
+  applyTheme(getSavedTheme());
   initUiControls();
-  await buildTranslationRegistry();
-  registerTranslatableContent(document);
-  window.updateTranslations = () => {
-    registerTranslatableContent(document);
-    updateTranslations();
-  };
-  await applyLanguage(localStorage.getItem(LANGUAGE_KEY) || localStorage.getItem(LEGACY_LANGUAGE_KEY) || DEFAULT_LANGUAGE);
   applyTheme(getSavedTheme());
 
-  const contentObserver = new MutationObserver((mutations) => {
-    let shouldRefreshTranslations = false;
+  const initializeI18n = async () => {
+    await buildTranslationRegistry();
+    registerTranslatableContent(document);
+    window.updateTranslations = () => {
+      registerTranslatableContent(document);
+      updateTranslations();
+    };
+    await applyLanguage(localStorage.getItem(LANGUAGE_KEY) || localStorage.getItem(LEGACY_LANGUAGE_KEY) || DEFAULT_LANGUAGE);
 
-    mutations.forEach((mutation) => {
-      mutation.addedNodes.forEach((addedNode) => {
-        if (addedNode.nodeType === Node.TEXT_NODE) {
-          registerTextNode(addedNode);
-          shouldRefreshTranslations = true;
-          return;
-        }
+    const contentObserver = new MutationObserver((mutations) => {
+      let shouldRefreshTranslations = false;
 
-        if (addedNode instanceof Element) {
-          registerTranslatableContent(addedNode);
-          shouldRefreshTranslations = true;
-        }
+      mutations.forEach((mutation) => {
+        mutation.addedNodes.forEach((addedNode) => {
+          if (addedNode.nodeType === Node.TEXT_NODE) {
+            registerTextNode(addedNode);
+            shouldRefreshTranslations = true;
+            return;
+          }
+
+          if (addedNode instanceof Element) {
+            registerTranslatableContent(addedNode);
+            shouldRefreshTranslations = true;
+          }
+        });
       });
+
+      if (shouldRefreshTranslations) updateTranslations();
     });
 
-    if (shouldRefreshTranslations) updateTranslations();
+    if (body) {
+      contentObserver.observe(body, {
+        childList: true,
+        subtree: true,
+      });
+    }
+  };
+
+  runWhenIdle(() => {
+    initializeI18n().catch(() => {});
   });
-
-  if (body) {
-    contentObserver.observe(body, {
-      childList: true,
-      subtree: true,
-    });
-  }
 
   let deferredInstallPrompt = null;
   const installPwaBtn = document.getElementById("installPwaBtn");
@@ -528,7 +552,8 @@
     });
   });
 
-  if ("serviceWorker" in navigator) {
+  const isLocalhost = ["localhost", "127.0.0.1", "[::1]"].includes(window.location.hostname);
+  if ("serviceWorker" in navigator && !isLocalhost) {
     window.addEventListener("load", () => {
       let hasRefreshedForSw = false;
       navigator.serviceWorker.addEventListener("controllerchange", () => {
@@ -637,8 +662,6 @@
   if (statsSection) observer.observe(statsSection);
 
   if (yearEl) yearEl.textContent = String(new Date().getFullYear());
-  refreshLastUpdated();
-
   const searchInput = document.getElementById("siteSearch");
   const searchableCards = [...document.querySelectorAll(".searchable-card")];
   const noResultsEl = document.getElementById("searchNoResults");
@@ -725,7 +748,179 @@
     }
   });
 
+  const galleryGrid = document.getElementById("galleryGrid");
+  const filterButtons = [...document.querySelectorAll(".filter-btn")];
+  const galleryItems = [...document.querySelectorAll(".gallery-item")];
+  const lightbox = document.getElementById("galleryLightbox");
+  const lightboxImage = document.getElementById("lightboxImage");
+  const lightboxCaption = document.getElementById("lightboxCaption");
+  const lightboxClose = lightbox?.querySelector(".lightbox-close");
+
+  const setActiveFilter = (filter) => {
+    filterButtons.forEach((button) => {
+      const isActive = button.dataset.filter === filter;
+      button.classList.toggle("active", isActive);
+      button.setAttribute("aria-selected", String(isActive));
+    });
+
+    galleryItems.forEach((item) => {
+      const category = item.dataset.category || "all";
+      const matches = filter === "all" || category === filter;
+      item.classList.toggle("is-hidden", !matches);
+    });
+  };
+
+  if (filterButtons.length) {
+    filterButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const filter = button.dataset.filter || "all";
+        setActiveFilter(filter);
+      });
+    });
+  }
+
+  const openLightbox = (item) => {
+    if (!lightbox || !lightboxImage || !item) return;
+    const img = item.querySelector("img");
+    const caption = item.querySelector("figcaption span");
+    if (!(img instanceof HTMLImageElement)) return;
+    lightboxImage.src = img.currentSrc || img.src;
+    lightboxImage.alt = img.alt || "Gallery image";
+    if (lightboxCaption) {
+      lightboxCaption.textContent = caption?.textContent?.trim() || img.alt || "";
+    }
+    lightbox.classList.add("open");
+    lightbox.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+  };
+
+  const closeLightbox = () => {
+    if (!lightbox || !lightboxImage) return;
+    lightbox.classList.remove("open");
+    lightbox.setAttribute("aria-hidden", "true");
+    lightboxImage.src = "";
+    document.body.style.overflow = "";
+  };
+
+  if (galleryGrid) {
+    galleryGrid.addEventListener("click", (event) => {
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+      const item = target.closest(".gallery-item");
+      if (!(item instanceof HTMLElement)) return;
+      openLightbox(item);
+    });
+  }
+
+  if (lightboxClose) {
+    lightboxClose.addEventListener("click", closeLightbox);
+  }
+
+  if (lightbox) {
+    lightbox.addEventListener("click", (event) => {
+      if (event.target === lightbox) closeLightbox();
+    });
+  }
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && lightbox?.classList.contains("open")) {
+      closeLightbox();
+    }
+  });
+
+  const starButtons = [...document.querySelectorAll(".star-btn")];
+  const ratingModal = document.getElementById("ratingModal");
+  const ratingCloseBtn = ratingModal?.querySelector(".rating-close");
+  const ratingStars = [...document.querySelectorAll(".rating-star")];
+  const ratingSubmitBtn = document.getElementById("ratingSubmitBtn");
+  const ratingThanks = document.getElementById("ratingThanks");
+  let selectedRating = 0;
+
+  const setRating = (value) => {
+    selectedRating = value;
+    starButtons.forEach((btn) => {
+      const btnValue = Number(btn.dataset.value || 0);
+      btn.classList.toggle("active", btnValue <= selectedRating);
+    });
+    ratingStars.forEach((star) => {
+      const starValue = Number(star.dataset.value || 0);
+      star.classList.toggle("active", starValue <= selectedRating);
+    });
+    if (ratingSubmitBtn) ratingSubmitBtn.disabled = selectedRating === 0;
+  };
+
+  const openRatingModal = (initialValue) => {
+    if (!ratingModal) return;
+    if (typeof initialValue === "number") setRating(initialValue);
+    ratingModal.classList.add("open");
+    ratingModal.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+  };
+
+  const closeRatingModal = () => {
+    if (!ratingModal) return;
+    ratingModal.classList.remove("open");
+    ratingModal.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+  };
+
+  starButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const value = Number(button.dataset.value || 0);
+      button.classList.add("is-clicked");
+      setTimeout(() => button.classList.remove("is-clicked"), 160);
+      openRatingModal(value);
+    });
+  });
+
+  ratingStars.forEach((star) => {
+    star.addEventListener("click", () => {
+      const value = Number(star.dataset.value || 0);
+      setRating(value);
+    });
+  });
+
+  if (ratingSubmitBtn) {
+    ratingSubmitBtn.addEventListener("click", () => {
+      if (selectedRating === 0) return;
+      closeRatingModal();
+      if (ratingThanks) ratingThanks.textContent = "Thanks for your feedback";
+    });
+  }
+
+  if (ratingCloseBtn) {
+    ratingCloseBtn.addEventListener("click", closeRatingModal);
+  }
+
+  if (ratingModal) {
+    ratingModal.addEventListener("click", (event) => {
+      if (event.target === ratingModal) closeRatingModal();
+    });
+  }
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && ratingModal?.classList.contains("open")) {
+      closeRatingModal();
+    }
+  });
+
   const noticeDownloadButtons = [...document.querySelectorAll(".notice-download-btn")];
+  const loadJsPdf = (() => {
+    let jsPdfPromise = null;
+    return () => {
+      if (window.jspdf?.jsPDF) return Promise.resolve(window.jspdf);
+      if (jsPdfPromise) return jsPdfPromise;
+      jsPdfPromise = new Promise((resolve, reject) => {
+        const script = document.createElement("script");
+        script.src = "https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js";
+        script.async = true;
+        script.onload = () => resolve(window.jspdf);
+        script.onerror = () => reject(new Error("Failed to load jsPDF"));
+        document.head.appendChild(script);
+      });
+      return jsPdfPromise;
+    };
+  })();
 
   const slugify = (value) =>
     (value || "notice")
@@ -735,8 +930,9 @@
       .replace(/^-+|-+$/g, "")
       .slice(0, 60) || "notice";
 
-  const generateNoticePdf = (card) => {
-    const jsPdfApi = window.jspdf?.jsPDF;
+  const generateNoticePdf = async (card) => {
+    const jsPdfNamespace = await loadJsPdf().catch(() => null);
+    const jsPdfApi = jsPdfNamespace?.jsPDF;
     if (!jsPdfApi) {
       alert(tMessage("pdfMissing", {}, "PDF generator is not loaded. Please refresh and try again."));
       return;
@@ -805,9 +1001,9 @@
   };
 
   noticeDownloadButtons.forEach((button) => {
-    button.addEventListener("click", () => {
+    button.addEventListener("click", async () => {
       const noticeCard = button.closest(".notice-card");
-      if (noticeCard) generateNoticePdf(noticeCard);
+      if (noticeCard) await generateNoticePdf(noticeCard);
     });
   });
 
