@@ -7,7 +7,7 @@
   --text: #1d2b23;
   --text-soft: #4c5a52;
   --border: rgba(46, 79, 63, 0.2);
-  --shadow: 0 10px 24px rgba(19, 30, 24, 0.12);
+  --shadow: 0 8px 18px rgba(19, 30, 24, 0.12);
   --radius-lg: 24px;
   --radius-md: 16px;
   --space-1: 0.5rem;
@@ -1451,7 +1451,7 @@ body.dark-mode {
   --text: #edf2ee;
   --text-soft: #c4d0c8;
   --border: rgba(142, 173, 158, 0.32);
-  --shadow: 0 12px 26px rgba(0, 0, 0, 0.36);
+  --shadow: 0 10px 22px rgba(0, 0, 0, 0.34);
   --ui-control-bg: rgba(29, 34, 32, 0.9);
   --ui-control-border: rgba(142, 173, 158, 0.28);
   background:
@@ -2425,6 +2425,14 @@ body.dark-mode .bottom-menu a.active {
     width: 100%;
   }
 
+}
+
+@media (max-width: 768px) {
+  .hero-bg-shape,
+  .dot,
+  .meta-icon {
+    animation: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
