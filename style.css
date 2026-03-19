@@ -1643,6 +1643,43 @@ body.dark-mode .bottom-menu a.active {
   border-radius: 14px;
 }
 
+.map-preview {
+  width: 100%;
+  min-height: 320px;
+  border: 0;
+  border-radius: 14px;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  gap: 0.35rem;
+  text-align: center;
+  background:
+    radial-gradient(circle at 15% 20%, rgba(46, 79, 63, 0.12), transparent 35%),
+    radial-gradient(circle at 85% 30%, rgba(212, 160, 23, 0.18), transparent 35%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(243, 245, 241, 0.95));
+  color: var(--primary-dark);
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.map-preview:hover,
+.map-preview:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 24px rgba(16, 28, 22, 0.14);
+}
+
+.map-preview-icon {
+  font-size: 2rem;
+}
+
+.map-preview-title {
+  font-weight: 700;
+}
+
+.map-preview-subtitle {
+  font-size: 0.9rem;
+  color: var(--text-soft);
+}
+
 .contact-layout {
   display: grid;
   gap: var(--space-4);

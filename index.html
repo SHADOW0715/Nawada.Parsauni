@@ -18,7 +18,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="style.min.css"/>
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -392,7 +392,7 @@
           </article>
 
           <article class="glass-card service-detail-card searchable-card" data-name="Religious Places" data-category="Religion" data-keywords="religious temple mosque masjid mandir harmony">
-            <img class="card-image" src="image/jama masjid.jpeg" alt="Religious place" loading="lazy" decoding="async" width="1600" height="1000" />
+            <img class="card-image" src="image/jama masjid.webp" alt="Religious place" loading="lazy" decoding="async" width="1600" height="1000" />
             <div class="card-content">
               <h3>Religious Places</h3>
               <p><span class="type-badge badge-religious">Temple</span> <span class="type-badge badge-religious">Mosque</span></p>
@@ -595,15 +595,26 @@
           Find Nawada Parsauni, UchkaGaon Block, Gopalganj District, Bihar on the map.
         </p>
         <article class="glass-card map-card">
-          <iframe
-            title="Map of Nawada Parsauni, Gopalganj, Bihar"
-            class="map-frame"
-            loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade"
-            width="600"
-            height="450"
-            src="https://www.google.com/maps?q=Nawada%20Parsauni%2C%20Gopalganj%2C%20Bihar&output=embed">
-          </iframe>
+          <button
+            class="map-preview"
+            type="button"
+            data-map-src="https://www.google.com/maps?q=Nawada%20Parsauni%2C%20Gopalganj%2C%20Bihar&output=embed"
+            aria-label="Load interactive map of Nawada Parsauni">
+            <span class="map-preview-icon" aria-hidden="true">&#128506;</span>
+            <span class="map-preview-title">Load Interactive Map</span>
+            <span class="map-preview-subtitle">Tap to view Nawada Parsauni on Google Maps</span>
+          </button>
+          <noscript>
+            <iframe
+              title="Map of Nawada Parsauni, Gopalganj, Bihar"
+              class="map-frame"
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+              width="600"
+              height="450"
+              src="https://www.google.com/maps?q=Nawada%20Parsauni%2C%20Gopalganj%2C%20Bihar&output=embed">
+            </iframe>
+          </noscript>
         </article>
       </div>
     </section>
@@ -656,7 +667,7 @@
                   aria-label="Open verification PDF in a new tab">
                   <img
                     class="qr-image"
-                    src="image/QR.png"
+                    src="image/QR.webp"
                     alt="Verification QR code"
                     width="140"
                     height="140"
@@ -679,7 +690,7 @@
         </p>
         <article class="glass-card map-card ad-showcase-card">
           <div class="ad-showcase-media">
-            <img class="ad-showcase-image" src="image/ads.png" width="700" height="500" alt="Promotional ad banner" loading="lazy" decoding="async" />
+            <img class="ad-showcase-image" src="image/ads.webp" width="700" height="500" alt="Promotional ad banner" loading="lazy" decoding="async" />
           </div>
           <div class="ad-showcase-content">
             <p class="ad-showcase-label">Promotion Space</p>
@@ -859,7 +870,7 @@
       <p class="analytics-note container">This website uses analytics to improve user experience. No personal data is stored.</p>
   </footer>
 
-  <script src="script.js" defer></script>
+  <script src="script.min.js" defer></script>
   <div class="rating-modal" id="ratingModal" aria-hidden="true">
     <div class="rating-modal-card" role="dialog" aria-modal="true" aria-label="Select rating">
       <button class="rating-close" type="button" aria-label="Close rating">&times;</button>
@@ -883,6 +894,9 @@
   </div>
 </body>
 </html>
+
+
+
 
 
 

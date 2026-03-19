@@ -563,7 +563,7 @@
       });
 
       navigator.serviceWorker
-        .register("sw.js?v=20260307-3")
+        .register("sw.js?v=20260319-1")
         .then((registration) => registration.update())
         .catch(() => {});
     });
@@ -903,6 +903,23 @@
       closeRatingModal();
     }
   });
+
+  const mapPreview = document.querySelector(".map-preview");
+  if (mapPreview instanceof HTMLButtonElement) {
+    mapPreview.addEventListener("click", () => {
+      const src = mapPreview.dataset.mapSrc;
+      if (!src) return;
+      const iframe = document.createElement("iframe");
+      iframe.className = "map-frame";
+      iframe.title = "Map of Nawada Parsauni, Gopalganj, Bihar";
+      iframe.loading = "lazy";
+      iframe.referrerPolicy = "no-referrer-when-downgrade";
+      iframe.width = "600";
+      iframe.height = "450";
+      iframe.src = src;
+      mapPreview.replaceWith(iframe);
+    });
+  }
 
   const noticeDownloadButtons = [...document.querySelectorAll(".notice-download-btn")];
   const loadJsPdf = (() => {
