@@ -1776,27 +1776,37 @@ body.dark-mode .bottom-menu a.active {
   border: 1px solid rgba(46, 79, 63, 0.16);
   box-shadow: 0 10px 20px rgba(16, 28, 22, 0.12);
   color: var(--primary-dark);
-  font-size: 1.35rem;
+  font-family: "Poppins", "Inter", sans-serif;
+  font-size: 1rem;
+  font-weight: 800;
+  line-height: 1;
 }
 
 .service-overview-grid .service-detail-card[data-category="Education"]::before {
-  content: "\1F393";
+  content: "ED";
+  color: #4a2f93;
 }
 
 .service-overview-grid .service-detail-card[data-category="Religion"]::before {
-  content: "\1F54C";
+  content: "RP";
+  color: #8a650f;
 }
 
 .service-overview-grid .service-detail-card[data-category="Medical"]::before {
-  content: "\2695";
+  content: "+";
+  color: #146c43;
+  font-size: 1.55rem;
 }
 
 .service-overview-grid .service-detail-card[data-category="Shops"]::before {
-  content: "\1F6D2";
+  content: "SH";
+  color: #1455a0;
 }
 
 .service-overview-grid .service-detail-card[data-category="Emergency"]::before {
-  content: "\1F6A8";
+  content: "SOS";
+  color: #9c2222;
+  font-size: 0.82rem;
 }
 
 .service-overview-grid .service-detail-card:hover,
