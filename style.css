@@ -150,11 +150,14 @@ a {
 }
 
 .brand-mark {
-  width: 2.2rem;
-  height: 2.2rem;
+  width: 2.35rem;
+  height: 2.35rem;
   border-radius: 50%;
   display: block;
-  object-fit: cover;
+  object-fit: contain;
+  padding: 0.08rem;
+  background: #3f443d;
+  box-shadow: 0 4px 10px rgba(16, 28, 22, 0.12);
 }
 
 .brand-text {
