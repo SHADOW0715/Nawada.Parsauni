@@ -1679,7 +1679,7 @@ body.dark-mode .bottom-menu a.active {
 }
 
 .page-content {
-  padding: 6rem 0 3rem;
+  padding: clamp(4.5rem, 8vw, 5.25rem) 0 clamp(1.5rem, 4vw, 2.4rem);
 }
 
 .source-list article + article {
@@ -1747,19 +1747,36 @@ body.dark-mode .bottom-menu a.active {
 }
 
 .service-page-head h1 {
-  margin-bottom: var(--space-2);
-  font-size: clamp(1.55rem, 5vw, 2.15rem);
+  margin-bottom: 0.45rem;
+  font-size: clamp(1.35rem, 4vw, 1.85rem);
+}
+
+.service-page-head .eyebrow {
+  margin-top: 0;
+  margin-bottom: 0.4rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+}
+
+.service-page-head .section-intro {
+  margin-bottom: 0.75rem;
+  font-size: 0.88rem;
+  line-height: 1.45;
 }
 
 .service-detail-grid {
   display: grid;
-  gap: clamp(0.7rem, 1.5vw, 1rem);
-  margin-top: var(--space-3);
+  gap: clamp(0.55rem, 1vw, 0.75rem);
+  margin-top: 0.7rem;
 }
 
 .service-detail-card {
   padding: 0;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  border-radius: 10px;
 }
 
 #services {
@@ -1850,7 +1867,8 @@ body.dark-mode .bottom-menu a.active {
 .card-image {
   display: block;
   width: 100%;
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 16 / 6.4;
+  max-height: 150px;
   object-fit: cover;
 }
 
@@ -1940,7 +1958,40 @@ body.dark-mode .bottom-menu a.active {
 }
 
 .card-content {
-  padding: var(--space-3);
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  padding: 0.68rem;
+}
+
+.service-detail-grid .card-content h2,
+.services-grid .card-content h2 {
+  margin-bottom: 0.32rem;
+  font-size: clamp(0.92rem, 2.4vw, 1.05rem);
+}
+
+.service-detail-grid .card-content p,
+.services-grid .card-content p {
+  margin-bottom: 0.34rem;
+  font-size: 0.78rem;
+  line-height: 1.34;
+}
+
+.service-detail-grid .card-content p:not(:first-of-type),
+.services-grid .card-content p {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.service-detail-grid .map-btn {
+  min-height: 34px;
+  margin-top: auto;
+  padding: 0.42rem 0.65rem;
+  border-radius: 8px;
+  font-size: 0.76rem;
 }
 
 .service-overview-grid .card-content {
@@ -2043,6 +2094,21 @@ body.dark-mode .bottom-menu a.active {
 
 .service-overview-grid .map-btn + .map-btn {
   margin-top: 0.3rem;
+}
+
+.page-content .services-grid {
+  display: grid;
+  gap: clamp(0.55rem, 1vw, 0.75rem);
+  margin-top: 0.7rem;
+}
+
+.page-content .services-grid .service-detail-card {
+  border-radius: 10px;
+}
+
+.page-content .services-grid .card-image {
+  aspect-ratio: 4 / 2.05;
+  max-height: 145px;
 }
 
 .nearby-grid {
@@ -2570,6 +2636,15 @@ body.dark-mode .bottom-menu a.active {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
+  .page-content .services-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .service-detail-grid .card-image,
+  .page-content .services-grid .card-image {
+    max-height: 135px;
+  }
+
   .split-grid,
   .verification-grid,
   .contact-layout {
@@ -2647,6 +2722,15 @@ body.dark-mode .bottom-menu a.active {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
+  .page-content .services-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .service-detail-grid .card-image,
+  .page-content .services-grid .card-image {
+    max-height: 122px;
+  }
+
   .service-overview-grid {
     grid-template-columns: repeat(5, minmax(0, 1fr));
   }
@@ -2663,6 +2747,14 @@ body.dark-mode .bottom-menu a.active {
 @media (min-width: 1280px) {
   .gallery-grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .page-content .services-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .page-content .services-grid .card-image {
+    max-height: 112px;
   }
 }
 
@@ -2705,6 +2797,36 @@ body.dark-mode .bottom-menu a.active {
 
   .service-detail-grid {
     margin-top: 0.75rem;
+  }
+
+  .page-content {
+    padding-top: 4.15rem;
+  }
+
+  .service-detail-grid,
+  .page-content .services-grid {
+    gap: 0.65rem;
+  }
+
+  .service-detail-grid .card-content,
+  .page-content .services-grid .card-content {
+    padding: 0.62rem;
+  }
+
+  .service-detail-grid .card-content h2,
+  .page-content .services-grid .card-content h2 {
+    font-size: 0.9rem;
+  }
+
+  .service-detail-grid .card-content p,
+  .page-content .services-grid .card-content p {
+    font-size: 0.76rem;
+    line-height: 1.32;
+  }
+
+  .service-detail-grid .card-image,
+  .page-content .services-grid .card-image {
+    max-height: 128px;
   }
 
   .service-overview-grid .card-content {
