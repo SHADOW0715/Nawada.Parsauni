@@ -563,7 +563,7 @@
       });
 
       navigator.serviceWorker
-        .register("sw.js?v=20260319-1")
+        .register("sw.js?v=20260520-1")
         .then((registration) => registration.update())
         .catch(() => {});
     });
@@ -581,9 +581,17 @@
 
     const setMobileMenuState = (isOpen) => {
       mobileMenu.classList.toggle("open", isOpen);
+      menuToggle.classList.toggle("is-open", isOpen);
       menuToggle.setAttribute("aria-expanded", String(isOpen));
+      menuToggle.setAttribute("aria-label", isOpen ? "Close menu" : "Open menu");
       mobileMenu.setAttribute("aria-hidden", String(!isOpen));
-      mobileMenu.toggleAttribute("inert", !isOpen);
+      if ("inert" in mobileMenu) {
+        mobileMenu.toggleAttribute("inert", !isOpen);
+      } else if (isOpen) {
+        mobileMenu.removeAttribute("inert");
+      } else {
+        mobileMenu.setAttribute("inert", "");
+      }
       mobileMenuLinks.forEach((link) => {
         if (isOpen) link.removeAttribute("tabindex");
         else link.setAttribute("tabindex", "-1");
@@ -607,6 +615,10 @@
       });
     });
 
+    window.addEventListener("resize", () => {
+      if (window.matchMedia("(min-width: 768px)").matches) closeMenu();
+    });
+
     document.addEventListener("click", (event) => {
       const target = event.target;
       if (!(target instanceof Element)) return;
@@ -614,6 +626,10 @@
       const clickedToggle = menuToggle.contains(target);
       const clickedMenu = mobileMenu.contains(target);
       if (!clickedToggle && !clickedMenu) closeMenu();
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && mobileMenu.classList.contains("open")) closeMenu();
     });
   }
 
@@ -1038,6 +1054,7 @@
     const throttleKey = "np_contact_last_submit_at";
     const minCooldownMs = 90 * 1000;
     let isSubmitting = false;
+    let allowNativeSubmit = false;
 
     const setStatus = (message, type) => {
       if (!statusEl) return;
@@ -1050,12 +1067,17 @@
     const sanitizePhone = (value) => (value || "").toString().replace(/\D/g, "");
     const readLastSubmitAt = () => Number(localStorage.getItem(throttleKey) || 0);
     const writeLastSubmitAt = (timestamp) => localStorage.setItem(throttleKey, String(timestamp));
+    const nativeSubmitFallback = () => {
+      allowNativeSubmit = true;
+      contactForm.submit();
+    };
 
     contactForm.addEventListener("submit", async (event) => {
+      if (allowNativeSubmit) return;
       event.preventDefault();
       if (isSubmitting) return;
 
-      const honeypotInput = contactForm.querySelector('input[name="_website"]');
+      const honeypotInput = contactForm.querySelector('input[name="_website"], input[name="_honey"]');
       if (honeypotInput instanceof HTMLInputElement && honeypotInput.value.trim() !== "") {
         setStatus(tMessage("formBlocked", {}, "Request blocked."), "error");
         return;
@@ -1146,8 +1168,11 @@
         contactForm.reset();
       } catch (error) {
         const message = error instanceof Error && error.message ? error.message : "";
-        if (message) setStatus(message, "error");
-        else setStatus(tMessage("formFailure", {}, "Could not send right now. Please try again after a short wait."), "error");
+        const fallbackMessage =
+          message ||
+          tMessage("formFailure", {}, "Could not send right now. Please try again after a short wait.");
+        setStatus(`${fallbackMessage} Sending with the standard form method...`, "error");
+        nativeSubmitFallback();
       } finally {
         isSubmitting = false;
         if (submitBtn) submitBtn.disabled = false;

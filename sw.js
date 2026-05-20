@@ -1,10 +1,12 @@
-const CACHE_NAME = "np-static-v7";
+const CACHE_NAME = "np-static-v8";
 const OFFLINE_URL = "/offline.html";
 const CORE_ASSETS = [
   "/",
   "/index.html",
   "/style.min.css",
+  "/style.css",
   "/script.min.js",
+  "/script.js",
   "/analytics.js",
   "/manifest.json",
   "/offline.html",
