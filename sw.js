@@ -1,4 +1,4 @@
-const CACHE_NAME = "np-static-v9";
+const CACHE_NAME = "np-static-v10";
 const OFFLINE_URL = "/offline.html";
 const CORE_ASSETS = [
   "/",

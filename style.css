@@ -1764,10 +1764,23 @@ body.dark-mode .bottom-menu a.active {
 
 #services {
   background: linear-gradient(180deg, rgba(255, 255, 255, 0), rgba(46, 79, 63, 0.045) 42%, rgba(255, 255, 255, 0));
+  padding-block: clamp(1.25rem, 3vw, 2.35rem);
+}
+
+#services h2 {
+  margin-bottom: 0.45rem;
+  font-size: clamp(1.25rem, 3.2vw, 1.7rem);
+}
+
+#services .section-intro {
+  margin-bottom: 0.75rem;
+  font-size: 0.86rem;
+  line-height: 1.45;
 }
 
 .service-overview-grid {
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
+  gap: clamp(0.55rem, 1vw, 0.8rem);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr));
   align-items: stretch;
 }
 
@@ -1775,20 +1788,20 @@ body.dark-mode .bottom-menu a.active {
   position: relative;
   display: flex;
   min-height: 0;
-  border-radius: 14px;
+  border-radius: 10px;
   border: 1px solid rgba(46, 79, 63, 0.16);
   background: rgba(255, 255, 255, 0.74);
-  box-shadow: 0 9px 20px rgba(16, 28, 22, 0.1);
+  box-shadow: 0 7px 16px rgba(16, 28, 22, 0.09);
 }
 
 .service-overview-grid .service-detail-card::before {
   position: absolute;
-  top: 0.75rem;
-  left: 0.75rem;
+  top: 0.58rem;
+  left: 0.58rem;
   z-index: 2;
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
   display: grid;
   place-items: center;
   background: rgba(255, 255, 255, 0.92);
@@ -1796,7 +1809,7 @@ body.dark-mode .bottom-menu a.active {
   box-shadow: 0 10px 20px rgba(16, 28, 22, 0.12);
   color: var(--primary-dark);
   font-family: "Poppins", "Inter", sans-serif;
-  font-size: 0.82rem;
+  font-size: 0.68rem;
   font-weight: 800;
   line-height: 1;
 }
@@ -1814,7 +1827,7 @@ body.dark-mode .bottom-menu a.active {
 .service-overview-grid .service-detail-card[data-category="Medical"]::before {
   content: "+";
   color: #146c43;
-  font-size: 1.25rem;
+  font-size: 1.05rem;
 }
 
 .service-overview-grid .service-detail-card[data-category="Shops"]::before {
@@ -1825,7 +1838,7 @@ body.dark-mode .bottom-menu a.active {
 .service-overview-grid .service-detail-card[data-category="Emergency"]::before {
   content: "SOS";
   color: #9c2222;
-  font-size: 0.68rem;
+  font-size: 0.58rem;
 }
 
 .service-overview-grid .service-detail-card:hover,
@@ -1937,21 +1950,22 @@ body.dark-mode .bottom-menu a.active {
   display: flex;
   flex-direction: column;
   min-width: 0;
-  padding: 3.35rem 0.85rem 0.85rem;
+  padding: 2.75rem 0.65rem 0.65rem;
 }
 
 .service-overview-grid .card-content h3 {
-  margin-bottom: 0.42rem;
-  font-size: 0.98rem;
+  margin-bottom: 0.32rem;
+  font-size: 0.88rem;
   color: var(--primary-dark);
 }
 
 .service-overview-grid .card-content p {
-  margin-bottom: 0.45rem;
-  font-size: 0.82rem;
-  line-height: 1.38;
+  margin-bottom: 0.35rem;
+  font-size: 0.76rem;
+  line-height: 1.32;
 }
 
+.service-overview-grid .card-content p:nth-of-type(2),
 .service-overview-grid .card-content p:nth-of-type(3),
 .service-overview-grid .card-content p:nth-of-type(4) {
   display: none;
@@ -1962,7 +1976,7 @@ body.dark-mode .bottom-menu a.active {
 .service-overview-grid .card-content p:first-of-type {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.35rem;
+  gap: 0.25rem;
 }
 
 .card-content h2 {
@@ -1974,8 +1988,8 @@ body.dark-mode .bottom-menu a.active {
   display: inline-flex;
   align-items: center;
   border-radius: 999px;
-  padding: 0.22rem 0.55rem;
-  font-size: 0.66rem;
+  padding: 0.18rem 0.42rem;
+  font-size: 0.58rem;
   font-weight: 800;
   letter-spacing: 0.02em;
   text-transform: uppercase;
@@ -2019,16 +2033,16 @@ body.dark-mode .bottom-menu a.active {
 
 .service-overview-grid .map-btn {
   min-width: 0;
-  min-height: 36px;
+  min-height: 32px;
   margin-top: auto;
-  padding: 0.48rem 0.65rem;
-  border-radius: 10px;
-  font-size: 0.78rem;
+  padding: 0.38rem 0.5rem;
+  border-radius: 8px;
+  font-size: 0.72rem;
   overflow-wrap: anywhere;
 }
 
 .service-overview-grid .map-btn + .map-btn {
-  margin-top: 0.38rem;
+  margin-top: 0.3rem;
 }
 
 .nearby-grid {
@@ -2694,11 +2708,20 @@ body.dark-mode .bottom-menu a.active {
   }
 
   .service-overview-grid .card-content {
-    padding: 3rem 0.75rem 0.75rem;
+    padding: 2.6rem 0.65rem 0.65rem;
+  }
+
+  .service-overview-grid .card-content h3 {
+    font-size: 0.86rem;
+  }
+
+  .service-overview-grid .card-content p:nth-of-type(2) {
+    display: block;
+    font-size: 0.74rem;
   }
 
   .service-overview-grid .map-btn {
-    font-size: 0.76rem;
+    font-size: 0.72rem;
   }
 
   .cookie-banner {
