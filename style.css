@@ -8,14 +8,14 @@
   --text-soft: #4c5a52;
   --border: rgba(46, 79, 63, 0.2);
   --shadow: 0 8px 18px rgba(19, 30, 24, 0.12);
-  --radius-lg: 24px;
-  --radius-md: 16px;
+  --radius-lg: 18px;
+  --radius-md: 12px;
   --space-1: 0.5rem;
   --space-2: 0.75rem;
   --space-3: 1rem;
-  --space-4: 1.5rem;
-  --space-5: 2rem;
-  --space-6: 3rem;
+  --space-4: 1.15rem;
+  --space-5: 1.6rem;
+  --space-6: 2.25rem;
   --transition: 280ms ease;
   --ui-control-bg: rgba(255, 255, 255, 0.78);
   --ui-control-border: rgba(46, 79, 63, 0.22);
@@ -410,30 +410,30 @@ body.lang-switching [data-i18n] {
 }
 
 .hero h1 {
-  margin-top: var(--space-3);
-  font-size: clamp(2rem, 9vw, 3.7rem);
+  margin-top: var(--space-2);
+  font-size: clamp(1.8rem, 7vw, 3.05rem);
   color: var(--primary-dark);
 }
 
 .subtitle {
   max-width: 58ch;
   margin-inline: auto;
-  font-size: clamp(1rem, 3.2vw, 1.15rem);
+  font-size: clamp(0.94rem, 2.5vw, 1.05rem);
 }
 
 .hero-cta {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
+  gap: var(--space-2);
   align-items: center;
-  margin: var(--space-5) 0;
+  margin: var(--space-4) 0;
 }
 
 .btn {
-  min-height: 48px;
-  min-width: 180px;
+  min-height: 42px;
+  min-width: 150px;
   border-radius: 999px;
-  padding: 0.8rem 1.5rem;
+  padding: 0.65rem 1.15rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -478,9 +478,9 @@ body.lang-switching [data-i18n] {
 }
 
 .section {
-  padding: clamp(2.4rem, 6vw, 4.5rem) 0;
+  padding: clamp(1.8rem, 4.5vw, 3.25rem) 0;
   content-visibility: auto;
-  contain-intrinsic-size: 1px 800px;
+  contain-intrinsic-size: 1px 640px;
 }
 
 .search-section {
@@ -952,8 +952,8 @@ body.lang-switching [data-i18n] {
 
 .gallery-grid {
   display: grid;
-  gap: clamp(0.9rem, 2vw, 1.25rem);
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+  gap: clamp(0.75rem, 1.5vw, 1rem);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
   align-items: stretch;
 }
 
@@ -962,11 +962,11 @@ body.lang-switching [data-i18n] {
   position: relative;
   min-width: 0;
   aspect-ratio: 4 / 3;
-  border-radius: 18px;
+  border-radius: 14px;
   overflow: hidden;
   background: rgba(255, 255, 255, 0.8);
   border: 1px solid rgba(46, 79, 63, 0.2);
-  box-shadow: 0 14px 28px rgba(16, 28, 22, 0.12);
+  box-shadow: 0 10px 22px rgba(16, 28, 22, 0.11);
   cursor: zoom-in;
   transform: translateY(0);
   isolation: isolate;
@@ -997,7 +997,7 @@ body.lang-switching [data-i18n] {
   bottom: 0;
   z-index: 2;
   min-width: 0;
-  padding: 1.2rem 1rem 0.95rem;
+  padding: 0.95rem 0.8rem 0.75rem;
   color: #fff;
   background: transparent;
   display: grid;
@@ -1107,14 +1107,14 @@ body.lang-switching [data-i18n] {
 
 .notice-grid {
   display: grid;
-  gap: var(--space-4);
+  gap: var(--space-3);
 }
 
 .notice-card {
   background: var(--surface);
   border: 1px solid rgba(212, 160, 23, 0.25);
   border-radius: var(--radius-md);
-  padding: var(--space-4);
+  padding: var(--space-3);
   box-shadow: var(--shadow);
   opacity: 0;
   transform: translateY(18px);
@@ -1172,18 +1172,20 @@ body.lang-switching [data-i18n] {
 }
 
 .notice-download-btn {
-  margin-top: var(--space-3);
+  margin-top: var(--space-2);
   width: 100%;
-  min-height: 46px;
+  min-height: 40px;
 }
 
 .section h2 {
-  font-size: clamp(1.5rem, 5.6vw, 2.3rem);
+  font-size: clamp(1.35rem, 4.5vw, 1.95rem);
   color: var(--primary-dark);
 }
 
 .section-intro {
   max-width: 65ch;
+  margin-bottom: var(--space-3);
+  font-size: 0.96rem;
 }
 
 .info-grid,
@@ -1191,12 +1193,12 @@ body.lang-switching [data-i18n] {
 .services-grid,
 .split-grid {
   display: grid;
-  gap: var(--space-4);
+  gap: var(--space-3);
 }
 
 .glass-card {
   border-radius: var(--radius-md);
-  padding: var(--space-4);
+  padding: var(--space-3);
   background: var(--surface);
   border: 1px solid rgba(255, 255, 255, 0.65);
   box-shadow: var(--shadow);
@@ -1215,7 +1217,7 @@ body.lang-switching [data-i18n] {
 
 .counter {
   margin: 0;
-  font-size: clamp(2rem, 8vw, 2.6rem);
+  font-size: clamp(1.65rem, 6vw, 2.15rem);
   font-weight: 800;
   color: var(--primary-dark);
 }
@@ -1740,19 +1742,19 @@ body.dark-mode .bottom-menu a.active {
 
 .contact-layout {
   display: grid;
-  gap: var(--space-4);
-  margin-top: var(--space-4);
+  gap: var(--space-3);
+  margin-top: var(--space-3);
 }
 
 .service-page-head h1 {
   margin-bottom: var(--space-2);
-  font-size: clamp(1.8rem, 6vw, 2.6rem);
+  font-size: clamp(1.55rem, 5vw, 2.15rem);
 }
 
 .service-detail-grid {
   display: grid;
-  gap: clamp(0.9rem, 2vw, 1.25rem);
-  margin-top: var(--space-4);
+  gap: clamp(0.7rem, 1.5vw, 1rem);
+  margin-top: var(--space-3);
 }
 
 .service-detail-card {
@@ -1765,7 +1767,7 @@ body.dark-mode .bottom-menu a.active {
 }
 
 .service-overview-grid {
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
   align-items: stretch;
 }
 
@@ -1773,20 +1775,20 @@ body.dark-mode .bottom-menu a.active {
   position: relative;
   display: flex;
   min-height: 0;
-  border-radius: 18px;
+  border-radius: 14px;
   border: 1px solid rgba(46, 79, 63, 0.16);
   background: rgba(255, 255, 255, 0.74);
-  box-shadow: 0 12px 26px rgba(16, 28, 22, 0.11);
+  box-shadow: 0 9px 20px rgba(16, 28, 22, 0.1);
 }
 
 .service-overview-grid .service-detail-card::before {
   position: absolute;
-  top: 0.95rem;
-  left: 0.95rem;
+  top: 0.75rem;
+  left: 0.75rem;
   z-index: 2;
-  width: 42px;
-  height: 42px;
-  border-radius: 14px;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
   display: grid;
   place-items: center;
   background: rgba(255, 255, 255, 0.92);
@@ -1794,7 +1796,7 @@ body.dark-mode .bottom-menu a.active {
   box-shadow: 0 10px 20px rgba(16, 28, 22, 0.12);
   color: var(--primary-dark);
   font-family: "Poppins", "Inter", sans-serif;
-  font-size: 1rem;
+  font-size: 0.82rem;
   font-weight: 800;
   line-height: 1;
 }
@@ -1812,7 +1814,7 @@ body.dark-mode .bottom-menu a.active {
 .service-overview-grid .service-detail-card[data-category="Medical"]::before {
   content: "+";
   color: #146c43;
-  font-size: 1.55rem;
+  font-size: 1.25rem;
 }
 
 .service-overview-grid .service-detail-card[data-category="Shops"]::before {
@@ -1823,19 +1825,19 @@ body.dark-mode .bottom-menu a.active {
 .service-overview-grid .service-detail-card[data-category="Emergency"]::before {
   content: "SOS";
   color: #9c2222;
-  font-size: 0.82rem;
+  font-size: 0.68rem;
 }
 
 .service-overview-grid .service-detail-card:hover,
 .service-overview-grid .service-detail-card:focus-within {
-  transform: translateY(-5px);
-  box-shadow: 0 18px 32px rgba(16, 28, 22, 0.16);
+  transform: translateY(-3px);
+  box-shadow: 0 14px 24px rgba(16, 28, 22, 0.14);
 }
 
 .card-image {
   display: block;
   width: 100%;
-  aspect-ratio: 16 / 10;
+  aspect-ratio: 16 / 9;
   object-fit: cover;
 }
 
@@ -1856,9 +1858,9 @@ body.dark-mode .bottom-menu a.active {
 
 .ad-showcase-card {
   display: grid;
-  gap: clamp(1rem, 2.4vw, 1.5rem);
+  gap: clamp(0.85rem, 1.8vw, 1.15rem);
   align-items: center;
-  padding: clamp(0.85rem, 2vw, 1.1rem);
+  padding: clamp(0.7rem, 1.5vw, 0.9rem);
 }
 
 .ad-showcase-media {
@@ -1868,12 +1870,12 @@ body.dark-mode .bottom-menu a.active {
 .ad-showcase-image {
   display: block;
   width: 100%;
-  max-height: min(78vh, 900px);
+  max-height: min(64vh, 720px);
   aspect-ratio: auto;
   object-fit: contain;
   object-position: center;
   margin-inline: auto;
-  border-radius: 18px;
+  border-radius: 14px;
   background: linear-gradient(180deg, rgba(46, 79, 63, 0.04), rgba(46, 79, 63, 0.01));
 }
 
@@ -1925,7 +1927,7 @@ body.dark-mode .bottom-menu a.active {
 }
 
 .card-content {
-  padding: var(--space-4);
+  padding: var(--space-3);
 }
 
 .service-overview-grid .card-content {
@@ -1935,25 +1937,25 @@ body.dark-mode .bottom-menu a.active {
   display: flex;
   flex-direction: column;
   min-width: 0;
-  padding: 4.15rem 1rem 1rem;
+  padding: 3.35rem 0.85rem 0.85rem;
 }
 
 .service-overview-grid .card-content h3 {
-  margin-bottom: 0.55rem;
-  font-size: 1.08rem;
+  margin-bottom: 0.42rem;
+  font-size: 0.98rem;
   color: var(--primary-dark);
 }
 
 .service-overview-grid .card-content p {
-  margin-bottom: 0.65rem;
-  font-size: 0.91rem;
-  line-height: 1.45;
+  margin-bottom: 0.45rem;
+  font-size: 0.82rem;
+  line-height: 1.38;
 }
 
 .service-overview-grid .card-content p:nth-of-type(3),
 .service-overview-grid .card-content p:nth-of-type(4) {
-  display: block;
-  font-size: 0.84rem;
+  display: none;
+  font-size: 0.78rem;
   color: var(--text-soft);
 }
 
@@ -1965,15 +1967,15 @@ body.dark-mode .bottom-menu a.active {
 
 .card-content h2 {
   margin-bottom: var(--space-2);
-  font-size: clamp(1.2rem, 4.6vw, 1.45rem);
+  font-size: clamp(1.05rem, 3.8vw, 1.25rem);
 }
 
 .type-badge {
   display: inline-flex;
   align-items: center;
   border-radius: 999px;
-  padding: 0.3rem 0.7rem;
-  font-size: 0.72rem;
+  padding: 0.22rem 0.55rem;
+  font-size: 0.66rem;
   font-weight: 800;
   letter-spacing: 0.02em;
   text-transform: uppercase;
@@ -2012,31 +2014,31 @@ body.dark-mode .bottom-menu a.active {
 .map-btn {
   margin-top: var(--space-2);
   width: 100%;
-  min-height: 52px;
+  min-height: 44px;
 }
 
 .service-overview-grid .map-btn {
   min-width: 0;
-  min-height: 42px;
+  min-height: 36px;
   margin-top: auto;
-  padding: 0.65rem 0.8rem;
-  border-radius: 12px;
-  font-size: 0.9rem;
+  padding: 0.48rem 0.65rem;
+  border-radius: 10px;
+  font-size: 0.78rem;
   overflow-wrap: anywhere;
 }
 
 .service-overview-grid .map-btn + .map-btn {
-  margin-top: 0.5rem;
+  margin-top: 0.38rem;
 }
 
 .nearby-grid {
   display: grid;
-  gap: var(--space-4);
-  margin-top: var(--space-4);
+  gap: var(--space-3);
+  margin-top: var(--space-3);
 }
 
 .nearby-card {
-  border-radius: 18px;
+  border-radius: 14px;
   border: 1px solid rgba(46, 79, 63, 0.2);
   position: relative;
   overflow: hidden;
@@ -2454,7 +2456,7 @@ body.dark-mode .bottom-menu a.active {
 
   .desktop-nav {
     display: flex;
-    gap: var(--space-3);
+    gap: 0.45rem;
     align-items: center;
   }
 
@@ -2466,8 +2468,8 @@ body.dark-mode .bottom-menu a.active {
   .desktop-nav a {
     text-decoration: none;
     color: var(--primary-dark);
-    min-height: 42px;
-    padding: 0.4rem 0.75rem;
+    min-height: 38px;
+    padding: 0.34rem 0.58rem;
     border-radius: 10px;
     font-weight: 600;
   }
@@ -2526,7 +2528,7 @@ body.dark-mode .bottom-menu a.active {
 
   .calendar-list {
     position: relative;
-    gap: var(--space-4);
+    gap: var(--space-3);
   }
 
   .calendar-list::before {
@@ -2632,7 +2634,7 @@ body.dark-mode .bottom-menu a.active {
   }
 
   .service-overview-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(5, minmax(0, 1fr));
   }
 
   .emergency-grid .election-help {
@@ -2652,15 +2654,15 @@ body.dark-mode .bottom-menu a.active {
 
 @media (max-width: 640px) {
   .container {
-    width: min(100% - 1.1rem, 1180px);
+    width: min(100% - 1rem, 1180px);
   }
 
   .section h2 {
-    font-size: clamp(1.35rem, 8vw, 1.75rem);
+    font-size: clamp(1.22rem, 7vw, 1.55rem);
   }
 
   .section-intro {
-    font-size: 0.94rem;
+    font-size: 0.88rem;
   }
 
   .filter-group {
@@ -2676,7 +2678,7 @@ body.dark-mode .bottom-menu a.active {
   }
 
   .gallery-grid {
-    gap: 0.85rem;
+    gap: 0.7rem;
   }
 
   .gallery-item {
@@ -2684,19 +2686,19 @@ body.dark-mode .bottom-menu a.active {
   }
 
   .gallery-item figcaption {
-    padding: 1rem 0.85rem 0.75rem;
+    padding: 0.85rem 0.7rem 0.65rem;
   }
 
   .service-detail-grid {
-    margin-top: 1rem;
+    margin-top: 0.75rem;
   }
 
   .service-overview-grid .card-content {
-    padding: 3.9rem 0.85rem 0.85rem;
+    padding: 3rem 0.75rem 0.75rem;
   }
 
   .service-overview-grid .map-btn {
-    font-size: 0.86rem;
+    font-size: 0.76rem;
   }
 
   .cookie-banner {
