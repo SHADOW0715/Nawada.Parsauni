@@ -1048,7 +1048,7 @@
     popup.setAttribute("role", "dialog");
     popup.setAttribute("aria-modal", "true");
     popup.setAttribute("aria-label", translateAdText("Featured local business advertisement"));
-    const image = ad.posterImage || ad.image || "image/field.webp";
+    const image = ad.posterImage || ad.image || "image/Ads.png";
     const logo = ad.logo || "icons/icon-192.png";
     const phone = ad.phoneNumber || translateAdText("Contact Number");
     const websiteHref = ad.websiteLink || "advertisements.html";

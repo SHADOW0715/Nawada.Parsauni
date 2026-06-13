@@ -4285,7 +4285,7 @@ main > .section {
   overflow: hidden;
   margin: -0.35rem -0.35rem 1rem;
   border-radius: 14px;
-  background: #123125;
+  background: #0000;
 }
 
 .ad-poster-image {
@@ -4299,13 +4299,16 @@ main > .section {
 .ad-poster-wrap::after {
   content: "";
   position: absolute;
-  inset: 28% 0 0;
-  background: linear-gradient(180deg, transparent, rgba(9, 18, 14, 0.88));
+  inset: 55% 0 0;
+  background: linear-gradient(180deg, transparent, rgba(9, 18, 14, 0.42));
+  pointer-events: none;
 }
 
 .ad-poster-overlay {
   position: absolute;
-  inset: auto 0 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   z-index: 1;
   padding: 1rem;
   color: #fff;
