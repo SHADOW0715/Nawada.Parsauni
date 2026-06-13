@@ -792,7 +792,7 @@
       image: "image/sunlight.webp",
       logo: "icons/icon-192.png",
       websiteLink: "medical.html",
-      locationLink: "https://www.google.com/maps/search/?api=1&query=Nawada+Parsauni+Hospital+Gopalganj+Bihar",
+      locationLink: "image/Village NP ads.png",
       rating: 4.8,
       status: "Open Daily",
       featured: true,
@@ -804,7 +804,7 @@
       phoneNumber: "+91 99555 01234",
       address: "Main Bazaar, Nawada Parsauni",
       description: "Groceries, packaged food, and daily household essentials.",
-      image: "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=900&q=70",
+      image: "",
       logo: "icons/icon-192.png",
       websiteLink: "shops.html",
       locationLink: "https://www.google.com/maps/search/?api=1&query=Maa+Durga+Kirana+Store+Nawada+Parsauni",
@@ -960,7 +960,7 @@
     card.dataset.category = ad.category || "Advertisement";
     card.dataset.keywords = [ad.category, ad.ownerName, ad.address, ad.description].filter(Boolean).join(" ");
 
-    const image = ad.image || "image/field.webp";
+    const image = ad.image || "image/Ads.png";
     const logo = ad.logo || "icons/icon-192.png";
     const phone = ad.phoneNumber || "";
     const phoneDigits = normalizePhoneForLink(phone);
@@ -984,7 +984,6 @@
     card.innerHTML = `
       <div class="ad-media">
         <img class="ad-image" src="${image}" alt="${title}" loading="lazy" decoding="async">
-        <span class="ad-category-badge">${icon} ${translatedCategory}</span>
       </div>
       <div class="ad-content">
         <div class="ad-title-row">
@@ -994,10 +993,14 @@
             <p class="ad-rating">&#9733; ${ad.rating || "4.5"} ${ratingLabel}</p>
           </div>
         </div>
-        <p>${description}</p>
-        <p class="ad-meta"><strong>${ownerLabel}</strong> ${translateAdText(ad.ownerName || "To be updated")}</p>
-        <p class="ad-meta"><strong>${addressLabel}</strong> ${translateAdText(ad.address || "Nawada Parsauni, Bihar")}</p>
-        <p class="ad-status">${status}</p>
+        <p class="ad-category-label">${translatedCategory}</p>
+        <p class="ad-description">${description}</p>
+        <div class="ad-details">
+          <p class="ad-meta"><strong>${ownerLabel}</strong> ${translateAdText(ad.ownerName || "To be updated")}</p>
+          ${phone ? `<p class="ad-meta"><strong>${contactLabel}:</strong> ${phone}</p>` : ""}
+          <p class="ad-meta"><strong>${addressLabel}</strong> ${translateAdText(ad.address || "Nawada Parsauni, Bihar")}</p>
+        </div>
+        ${status ? `<p class="ad-status">${status}</p>` : ""}
         <div class="ad-actions">
           ${phoneDigits ? `<a class="btn btn-primary" href="tel:${phoneDigits}">${contactLabel}</a>` : ""}
           ${whatsappHref ? `<a class="btn btn-outline" href="${whatsappHref}" target="_blank" rel="noopener noreferrer">${whatsappLabel}</a>` : ""}
