@@ -960,7 +960,7 @@
     card.dataset.category = ad.category || "Advertisement";
     card.dataset.keywords = [ad.category, ad.ownerName, ad.address, ad.description].filter(Boolean).join(" ");
 
-    const image = ad.image || "image/Ads.png";
+    const image = "image/Ads.png";
     const logo = ad.logo || "icons/icon-192.png";
     const phone = ad.phoneNumber || "";
     const phoneDigits = normalizePhoneForLink(phone);
@@ -1048,7 +1048,7 @@
     popup.setAttribute("role", "dialog");
     popup.setAttribute("aria-modal", "true");
     popup.setAttribute("aria-label", translateAdText("Featured local business advertisement"));
-    const image = ad.posterImage || ad.image || "image/Ads.png";
+    const image = "image/Ads.png";
     const logo = ad.logo || "icons/icon-192.png";
     const phone = ad.phoneNumber || translateAdText("Contact Number");
     const websiteHref = ad.websiteLink || "advertisements.html";
