@@ -1,14 +1,16 @@
-const CACHE_NAME = "np-static-v12";
+const CACHE_NAME = "np-static-v13";
 const OFFLINE_URL = "/offline.html";
 const CORE_ASSETS = [
   "/",
   "/index.html",
+  "/advertisements.html",
   "/style.min.css",
   "/style.css",
   "/script.min.js",
   "/script.js",
   "/analytics.js",
   "/manifest.json",
+  "/data/advertisements.json",
   "/offline.html",
   "/icons/icon-192.png",
   "/icons/icon-512.png"
@@ -64,7 +66,8 @@ self.addEventListener("fetch", (event) => {
   }
 
   const isLocaleFile = url.pathname.startsWith("/locales/") && url.pathname.endsWith(".json");
-  if (isLocaleFile) {
+  const isDataFile = url.pathname.startsWith("/data/") && url.pathname.endsWith(".json");
+  if (isLocaleFile || isDataFile) {
     event.respondWith(
       fetch(req)
         .then((networkRes) => {

@@ -3,6 +3,9 @@
   const header = document.querySelector(".site-header");
   const menuToggle = document.getElementById("menuToggle");
   const mobileMenu = document.getElementById("mobileMenu");
+  const pageLoader = document.getElementById("pageLoader");
+  const scrollProgressBar = document.getElementById("scrollProgressBar");
+  const scrollTopBtn = document.getElementById("scrollTopBtn");
   const counters = document.querySelectorAll(".counter");
   const revealItems = document.querySelectorAll(".reveal");
   const yearEl = document.getElementById("year");
@@ -15,7 +18,7 @@
   const DEFAULT_LANGUAGE = "en";
   const pageName = (location.pathname.split("/").pop() || "index.html").replace(".html", "");
 
-  const supportedLanguages = new Set(["en", "hi", "ur"]);
+  const supportedLanguages = new Set(["en"]);
   const localeCache = new Map();
   const registeredTextNodes = [];
   const registeredAttrs = [];
@@ -330,12 +333,6 @@
   };
 
   const refreshLocalizedControls = () => {
-    const languageToggle = document.getElementById("languageToggle");
-    if (languageToggle) {
-      languageToggle.setAttribute("aria-label", tMessage("langLabel", {}, "Select language"));
-      languageToggle.value = currentLanguage;
-    }
-
     const installPwaBtn = document.getElementById("installPwaBtn");
     if (installPwaBtn) {
       installPwaBtn.textContent = tMessage("installApp", {}, "Install App");
@@ -358,9 +355,8 @@
   };
 
   const applyLanguage = async (lang) => {
-    const selected = supportedLanguages.has(lang) ? lang : DEFAULT_LANGUAGE;
+    const selected = DEFAULT_LANGUAGE;
     currentLanguage = selected;
-    ensureLocaleFonts(selected);
     currentLocale = await loadLocale(selected);
     currentStringMap = new Map();
     Object.entries(currentLocale?.strings || {}).forEach(([source, translated]) => {
@@ -371,8 +367,8 @@
     document.documentElement.lang = selected;
     document.documentElement.dir = dir;
     body.classList.toggle("rtl", dir === "rtl");
-    localStorage.setItem(LANGUAGE_KEY, selected);
-    localStorage.setItem(LEGACY_LANGUAGE_KEY, selected);
+    localStorage.removeItem(LANGUAGE_KEY);
+    localStorage.removeItem(LEGACY_LANGUAGE_KEY);
 
     body.classList.add("lang-switching");
     requestAnimationFrame(() => {
@@ -409,23 +405,7 @@
     themeIcon.textContent = "\u2600";
     themeToggle.appendChild(themeIcon);
 
-    const languageToggle = document.createElement("select");
-    languageToggle.id = "languageToggle";
-    languageToggle.className = "language-toggle";
-    languageToggle.setAttribute("aria-label", "Select language");
-
-    [
-      { value: "en", label: "EN" },
-      { value: "hi", label: "\u0939\u093f\u0902\u0926\u0940" },
-      { value: "ur", label: "\u0627\u0631\u062f\u0648" },
-    ].forEach((language) => {
-      const option = document.createElement("option");
-      option.value = language.value;
-      option.textContent = language.label;
-      languageToggle.appendChild(option);
-    });
-
-    controls.append(themeToggle, languageToggle);
+    controls.append(themeToggle);
 
     const installBtn = document.createElement("button");
     installBtn.id = "installPwaBtn";
@@ -457,23 +437,26 @@
       });
     }
 
-    const localLanguageToggle = document.getElementById("languageToggle");
-    if (localLanguageToggle) {
-      localLanguageToggle.addEventListener("change", async (event) => {
-        const target = event.target;
-        if (!(target instanceof HTMLSelectElement)) return;
-        await applyLanguage(target.value);
-        trackEvent("language_change", {
-          section_name: "display_controls",
-          button_type: target.value,
-        });
-      });
-    }
   };
 
   applyTheme(getSavedTheme());
   initUiControls();
   applyTheme(getSavedTheme());
+
+  const ensureAdvertisementNavLink = () => {
+    document.querySelectorAll(".sub-nav").forEach((nav) => {
+      const hasLink = [...nav.querySelectorAll("a")].some((link) => (link.getAttribute("href") || "").includes("advertisements.html"));
+      if (hasLink) return;
+      const item = document.createElement("li");
+      const link = document.createElement("a");
+      link.href = "advertisements.html";
+      link.textContent = "Advertisements";
+      item.appendChild(link);
+      nav.appendChild(item);
+    });
+  };
+
+  ensureAdvertisementNavLink();
 
   const initializeI18n = async () => {
     await buildTranslationRegistry();
@@ -482,7 +465,7 @@
       registerTranslatableContent(document);
       updateTranslations();
     };
-    await applyLanguage(localStorage.getItem(LANGUAGE_KEY) || localStorage.getItem(LEGACY_LANGUAGE_KEY) || DEFAULT_LANGUAGE);
+    await applyLanguage(DEFAULT_LANGUAGE);
 
     const contentObserver = new MutationObserver((mutations) => {
       let shouldRefreshTranslations = false;
@@ -575,6 +558,36 @@
   };
   syncHeader();
   window.addEventListener("scroll", syncHeader, { passive: true });
+
+  const updateScrollProgress = () => {
+    const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = scrollable > 0 ? Math.min(100, Math.max(0, (window.scrollY / scrollable) * 100)) : 0;
+    if (scrollProgressBar) scrollProgressBar.style.width = `${progress}%`;
+    if (scrollTopBtn) scrollTopBtn.classList.toggle("visible", window.scrollY > 520);
+  };
+
+  updateScrollProgress();
+  window.addEventListener("scroll", updateScrollProgress, { passive: true });
+  window.addEventListener("resize", updateScrollProgress);
+
+  if (scrollTopBtn) {
+    scrollTopBtn.addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  }
+
+  const hidePageLoader = () => {
+    if (!pageLoader) return;
+    pageLoader.classList.add("is-hidden");
+    setTimeout(() => pageLoader.remove(), 420);
+  };
+
+  if (document.readyState === "complete") {
+    hidePageLoader();
+  } else {
+    window.addEventListener("load", hidePageLoader, { once: true });
+    setTimeout(hidePageLoader, 1800);
+  }
 
   if (menuToggle && mobileMenu) {
     const mobileMenuLinks = [...mobileMenu.querySelectorAll("a")];
@@ -677,13 +690,49 @@
   const statsSection = document.getElementById("stats");
   if (statsSection) observer.observe(statsSection);
 
+  const sectionNavLinks = [...document.querySelectorAll('.desktop-nav a[href^="#"], .mobile-menu a[href^="#"]')];
+  const sectionNavMap = new Map();
+  sectionNavLinks.forEach((link) => {
+    const id = link.getAttribute("href")?.slice(1);
+    if (!id) return;
+    const links = sectionNavMap.get(id) || [];
+    links.push(link);
+    sectionNavMap.set(id, links);
+  });
+
+  const setActiveSection = (id) => {
+    sectionNavLinks.forEach((link) => link.classList.remove("active"));
+    (sectionNavMap.get(id) || []).forEach((link) => link.classList.add("active"));
+  };
+
+  const sectionObserver = new IntersectionObserver(
+    (entries) => {
+      const visible = entries
+        .filter((entry) => entry.isIntersecting)
+        .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+      if (visible?.target?.id) setActiveSection(visible.target.id);
+    },
+    {
+      rootMargin: "-24% 0px -62% 0px",
+      threshold: [0.08, 0.18, 0.32],
+    }
+  );
+
+  sectionNavMap.forEach((_, id) => {
+    const section = document.getElementById(id);
+    if (section) sectionObserver.observe(section);
+  });
+
   if (yearEl) yearEl.textContent = String(new Date().getFullYear());
   const searchInput = document.getElementById("siteSearch");
-  const searchableCards = [...document.querySelectorAll(".searchable-card")];
+  let searchableCards = [...document.querySelectorAll(".searchable-card")];
   const noResultsEl = document.getElementById("searchNoResults");
   const resultCountEl = document.getElementById("searchResultCount");
 
   const normalize = (value) => (value || "").toString().toLowerCase().trim();
+  const refreshSearchableCards = () => {
+    searchableCards = [...document.querySelectorAll(".searchable-card")];
+  };
 
   const runSearch = (query) => {
     if (!searchableCards.length) return;
@@ -730,6 +779,341 @@
 
   document.addEventListener("np:languagechange", () => {
     runSearch(searchInput instanceof HTMLInputElement ? searchInput.value : "");
+  });
+
+  const fallbackAdvertisements = [
+    {
+      businessName: "Nawada Parsauni Village Hospital",
+      category: "Hospitals",
+      ownerName: "Dr. A. Kumar",
+      phoneNumber: "+91 99555 00881",
+      address: "Near Panchayat Bhawan, Nawada Parsauni",
+      description: "Primary consultation, first-aid support, and health guidance for local families.",
+      image: "image/sunlight.webp",
+      logo: "icons/icon-192.png",
+      websiteLink: "medical.html",
+      locationLink: "https://www.google.com/maps/search/?api=1&query=Nawada+Parsauni+Hospital+Gopalganj+Bihar",
+      rating: 4.8,
+      status: "Open Daily",
+      featured: true,
+    },
+    {
+      businessName: "Maa Durga Kirana Store",
+      category: "Shops",
+      ownerName: "Manoj Gupta",
+      phoneNumber: "+91 99555 01234",
+      address: "Main Bazaar, Nawada Parsauni",
+      description: "Groceries, packaged food, and daily household essentials.",
+      image: "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=900&q=70",
+      logo: "icons/icon-192.png",
+      websiteLink: "shops.html",
+      locationLink: "https://www.google.com/maps/search/?api=1&query=Maa+Durga+Kirana+Store+Nawada+Parsauni",
+      rating: 4.7,
+      status: "Open Daily",
+      featured: true,
+    },
+    {
+      businessName: "Bright Future Coaching Institute",
+      category: "Coaching Centers",
+      ownerName: "S. Alam",
+      phoneNumber: "+91 98111 04567",
+      address: "Manbodh Parsauni Road, Nawada Parsauni",
+      description: "School tuition, exam preparation, and scholarship guidance.",
+      image: "https://images.unsplash.com/photo-1588072432836-e10032774350?auto=format&fit=crop&w=900&q=70",
+      logo: "icons/icon-192.png",
+      websiteLink: "education.html",
+      locationLink: "https://www.google.com/maps/search/?api=1&query=Coaching+Institute+Nawada+Parsauni",
+      rating: 4.9,
+      status: "Admissions Open",
+      featured: true,
+    },
+  ];
+
+  const advertisementCategoryIcon = {
+    Hospitals: "\u{1F3E5}",
+    Shops: "\u{1F6D2}",
+    Restaurants: "\u{1F37D}",
+    "Medical Stores": "\u{1F48A}",
+    "Coaching Centers": "\u{1F4DA}",
+    Banks: "\u{1F3E6}",
+    "Agriculture Services": "\u{1F69C}",
+    "Transport Services": "\u{1F695}",
+  };
+
+  const advertisementTranslations = {
+    hi: {
+      "Featured Local Business": "विशेष स्थानीय व्यवसाय",
+      "Featured Advertisements": "विशेष विज्ञापन",
+      "Learn More": "और जानें",
+      "Close": "बंद करें",
+      "Contact": "संपर्क",
+      "WhatsApp": "व्हाट्सऐप",
+      "Location": "स्थान",
+      "Visit Now": "अभी देखें",
+      "Rating": "रेटिंग",
+      "Owner:": "मालिक:",
+      "Address:": "पता:",
+      "Contact Number": "संपर्क नंबर",
+      "Advertisements will appear here after approval.": "स्वीकृति के बाद विज्ञापन यहां दिखाई देंगे।",
+      "Hospitals": "अस्पताल",
+      "Shops": "दुकानें",
+      "Restaurants": "रेस्तरां",
+      "Medical Stores": "मेडिकल स्टोर",
+      "Coaching Centers": "कोचिंग सेंटर",
+      "Banks": "बैंक",
+      "Agriculture Services": "कृषि सेवाएं",
+      "Transport Services": "परिवहन सेवाएं",
+      "Nawada Parsauni Village Hospital": "नवादा परसौनी गांव अस्पताल",
+      "Maa Durga Kirana Store": "मां दुर्गा किराना स्टोर",
+      "Shifa Medical Store": "शिफा मेडिकल स्टोर",
+      "Bright Future Coaching Institute": "ब्राइट फ्यूचर कोचिंग संस्थान",
+      "Parsauni Family Restaurant": "परसौनी फैमिली रेस्टोरेंट",
+      "Kisan Agriculture Services": "किसान कृषि सेवाएं",
+      "Thawe Bank Service Point": "थावे बैंक सेवा केंद्र",
+      "Nawada Transport Service": "नवादा परिवहन सेवा",
+      "Primary consultation, first-aid support, health guidance, and referral assistance for nearby families.": "नजदीकी परिवारों के लिए प्राथमिक परामर्श, प्राथमिक उपचार, स्वास्थ्य मार्गदर्शन और रेफरल सहायता।",
+      "Groceries, packaged food, household essentials, and daily-use supplies for village families.": "गांव के परिवारों के लिए किराना, पैकेज्ड खाद्य सामग्री, घरेलू जरूरी सामान और दैनिक उपयोग की वस्तुएं।",
+      "Medicine counter, basic health products, doctor-prescribed medicines, and emergency essentials.": "दवा काउंटर, बुनियादी स्वास्थ्य उत्पाद, डॉक्टर द्वारा लिखी दवाएं और आपातकालीन जरूरी सामान।",
+      "School tuition, board exam preparation, scholarship guidance, and foundational learning support.": "स्कूल ट्यूशन, बोर्ड परीक्षा तैयारी, छात्रवृत्ति मार्गदर्शन और बुनियादी सीखने की सहायता।",
+      "Tea, snacks, breakfast, and family-friendly food service for local visitors and villagers.": "स्थानीय आगंतुकों और ग्रामीणों के लिए चाय, नाश्ता, भोजन और परिवार-अनुकूल सेवा।",
+      "Seeds, fertilizer guidance, farming tools, seasonal support, and agricultural service connections.": "बीज, उर्वरक मार्गदर्शन, कृषि उपकरण, मौसमी सहायता और कृषि सेवा संपर्क।",
+      "Banking guidance, account support, withdrawal assistance, and government scheme payment help.": "बैंकिंग मार्गदर्शन, खाता सहायता, निकासी सहायता और सरकारी योजना भुगतान मदद।",
+      "Local travel support, auto service, goods transport, and route assistance for nearby towns.": "स्थानीय यात्रा सहायता, ऑटो सेवा, माल परिवहन और नजदीकी शहरों के लिए मार्ग सहायता।",
+      "Open Daily": "प्रतिदिन खुला",
+      "Morning to Evening": "सुबह से शाम",
+      "Admissions Open": "प्रवेश खुले हैं",
+      "Seasonal Support": "मौसमी सहायता",
+      "Working Hours": "कार्य समय",
+      "Call Before Visit": "आने से पहले कॉल करें"
+    },
+    ur: {
+      "Featured Local Business": "نمایاں مقامی کاروبار",
+      "Featured Advertisements": "نمایاں اشتہارات",
+      "Learn More": "مزید جانیں",
+      "Close": "بند کریں",
+      "Contact": "رابطہ",
+      "WhatsApp": "واٹس ایپ",
+      "Location": "مقام",
+      "Visit Now": "ابھی دیکھیں",
+      "Rating": "ریٹنگ",
+      "Owner:": "مالک:",
+      "Address:": "پتہ:",
+      "Contact Number": "رابطہ نمبر",
+      "Advertisements will appear here after approval.": "منظوری کے بعد اشتہارات یہاں دکھائی دیں گے۔",
+      "Hospitals": "ہسپتال",
+      "Shops": "دکانیں",
+      "Restaurants": "ریستوران",
+      "Medical Stores": "میڈیکل اسٹورز",
+      "Coaching Centers": "کوچنگ سینٹرز",
+      "Banks": "بینک",
+      "Agriculture Services": "زرعی خدمات",
+      "Transport Services": "ٹرانسپورٹ خدمات",
+      "Nawada Parsauni Village Hospital": "نوادہ پرسونی گاؤں ہسپتال",
+      "Maa Durga Kirana Store": "ماں درگا کرانہ اسٹور",
+      "Shifa Medical Store": "شفا میڈیکل اسٹور",
+      "Bright Future Coaching Institute": "برائٹ فیوچر کوچنگ انسٹی ٹیوٹ",
+      "Parsauni Family Restaurant": "پرسونی فیملی ریسٹورنٹ",
+      "Kisan Agriculture Services": "کسان زرعی خدمات",
+      "Thawe Bank Service Point": "تھاوے بینک سروس پوائنٹ",
+      "Nawada Transport Service": "نوادہ ٹرانسپورٹ سروس",
+      "Primary consultation, first-aid support, health guidance, and referral assistance for nearby families.": "قریبی خاندانوں کے لیے بنیادی مشاورت، فرسٹ ایڈ، صحت رہنمائی اور ریفرل مدد۔",
+      "Groceries, packaged food, household essentials, and daily-use supplies for village families.": "گاؤں کے خاندانوں کے لیے کرانہ، پیک شدہ غذا، گھریلو ضروریات اور روزمرہ سامان۔",
+      "Medicine counter, basic health products, doctor-prescribed medicines, and emergency essentials.": "دوا کاؤنٹر، بنیادی صحت مصنوعات، ڈاکٹر کی تجویز کردہ ادویات اور ہنگامی ضروریات۔",
+      "School tuition, board exam preparation, scholarship guidance, and foundational learning support.": "اسکول ٹیوشن، بورڈ امتحان تیاری، اسکالرشپ رہنمائی اور بنیادی تعلیم کی مدد۔",
+      "Tea, snacks, breakfast, and family-friendly food service for local visitors and villagers.": "مقامی زائرین اور دیہاتیوں کے لیے چائے، ناشتہ، کھانا اور خاندانی سروس۔",
+      "Seeds, fertilizer guidance, farming tools, seasonal support, and agricultural service connections.": "بیج، کھاد رہنمائی، زرعی اوزار، موسمی مدد اور زرعی خدمات کے رابطے۔",
+      "Banking guidance, account support, withdrawal assistance, and government scheme payment help.": "بینکنگ رہنمائی، اکاؤنٹ مدد، رقم نکالنے کی مدد اور سرکاری اسکیم ادائیگی مدد۔",
+      "Local travel support, auto service, goods transport, and route assistance for nearby towns.": "مقامی سفر، آٹو سروس، سامان نقل و حمل اور قریبی شہروں کے راستوں کی مدد۔",
+      "Open Daily": "روزانہ کھلا",
+      "Morning to Evening": "صبح سے شام",
+      "Admissions Open": "داخلے جاری ہیں",
+      "Seasonal Support": "موسمی مدد",
+      "Working Hours": "اوقات کار",
+      "Call Before Visit": "آنے سے پہلے کال کریں"
+    }
+  };
+
+  const translateAdText = (value) => {
+    const text = value || "";
+    if (currentLanguage === DEFAULT_LANGUAGE) return text;
+    return advertisementTranslations[currentLanguage]?.[text] || getTranslation(ensureTranslationKey(text, "text"), text);
+  };
+
+  const normalizePhoneForLink = (value) => (value || "").replace(/[^\d]/g, "");
+
+  const loadAdvertisements = async () => {
+    try {
+      const response = await fetch("data/advertisements.json", { cache: "no-cache" });
+      if (!response.ok) throw new Error("Advertisement data unavailable");
+      const ads = await response.json();
+      return Array.isArray(ads) && ads.length ? ads : fallbackAdvertisements;
+    } catch (_) {
+      return fallbackAdvertisements;
+    }
+  };
+
+  const createAdvertisementCard = (ad) => {
+    const card = document.createElement("article");
+    card.className = "advertisement-card searchable-card";
+    card.tabIndex = 0;
+    card.dataset.name = ad.businessName || "";
+    card.dataset.category = ad.category || "Advertisement";
+    card.dataset.keywords = [ad.category, ad.ownerName, ad.address, ad.description].filter(Boolean).join(" ");
+
+    const image = ad.image || "image/field.webp";
+    const logo = ad.logo || "icons/icon-192.png";
+    const phone = ad.phoneNumber || "";
+    const phoneDigits = normalizePhoneForLink(phone);
+    const whatsappHref = phoneDigits ? `https://wa.me/${phoneDigits}?text=Namaste%2C%20I%20am%20contacting%20from%20the%20Nawada%20Parsauni%20advertisement%20directory.` : "";
+    const mapHref = ad.locationLink || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(ad.address || ad.businessName || "Nawada Parsauni")}`;
+    const websiteHref = ad.websiteLink || "#";
+    const category = ad.category || "Local Business";
+    const icon = advertisementCategoryIcon[category] || "\u{1F3EA}";
+    const title = translateAdText(ad.businessName || "Local Business");
+    const translatedCategory = translateAdText(category);
+    const description = translateAdText(ad.description || "Local service provider for Nawada Parsauni and nearby areas.");
+    const ownerLabel = translateAdText("Owner:");
+    const addressLabel = translateAdText("Address:");
+    const status = translateAdText(ad.status || "Contact before visit");
+    const contactLabel = translateAdText("Contact");
+    const whatsappLabel = translateAdText("WhatsApp");
+    const locationLabel = translateAdText("Location");
+    const visitLabel = translateAdText("Visit Now");
+    const ratingLabel = translateAdText("Rating");
+
+    card.innerHTML = `
+      <div class="ad-media">
+        <img class="ad-image" src="${image}" alt="${title}" loading="lazy" decoding="async">
+        <span class="ad-category-badge">${icon} ${translatedCategory}</span>
+      </div>
+      <div class="ad-content">
+        <div class="ad-title-row">
+          <img class="ad-logo" src="${logo}" alt="" loading="lazy" decoding="async">
+          <div>
+            <h3>${title}</h3>
+            <p class="ad-rating">&#9733; ${ad.rating || "4.5"} ${ratingLabel}</p>
+          </div>
+        </div>
+        <p>${description}</p>
+        <p class="ad-meta"><strong>${ownerLabel}</strong> ${translateAdText(ad.ownerName || "To be updated")}</p>
+        <p class="ad-meta"><strong>${addressLabel}</strong> ${translateAdText(ad.address || "Nawada Parsauni, Bihar")}</p>
+        <p class="ad-status">${status}</p>
+        <div class="ad-actions">
+          ${phoneDigits ? `<a class="btn btn-primary" href="tel:${phoneDigits}">${contactLabel}</a>` : ""}
+          ${whatsappHref ? `<a class="btn btn-outline" href="${whatsappHref}" target="_blank" rel="noopener noreferrer">${whatsappLabel}</a>` : ""}
+          <a class="btn btn-outline" href="${mapHref}" target="_blank" rel="noopener noreferrer">${locationLabel}</a>
+          ${websiteHref !== "#" ? `<a class="btn btn-outline" href="${websiteHref}">${visitLabel}</a>` : ""}
+        </div>
+      </div>
+    `;
+
+    card.addEventListener("click", (event) => {
+      if (event.target instanceof Element && event.target.closest("a, button")) return;
+      openAdvertisementPoster(ad);
+    });
+    card.addEventListener("keydown", (event) => {
+      if (event.key !== "Enter" && event.key !== " ") return;
+      event.preventDefault();
+      openAdvertisementPoster(ad);
+    });
+
+    return card;
+  };
+
+  const renderAdvertisements = (container, advertisements, options = {}) => {
+    if (!container) return;
+    const featuredOnly = container.dataset.adsFeatured === "true" || options.featuredOnly;
+    const limit = Number(container.dataset.adsLimit || options.limit || 0);
+    let visibleAds = featuredOnly ? advertisements.filter((ad) => ad.featured) : advertisements;
+    if (limit > 0) visibleAds = visibleAds.slice(0, limit);
+
+    container.innerHTML = "";
+    visibleAds.forEach((ad) => {
+      container.appendChild(createAdvertisementCard(ad));
+    });
+
+    if (!visibleAds.length) {
+      container.innerHTML = '<p class="listing-disclaimer">Advertisements will appear here after approval.</p>';
+    }
+  };
+
+  const openAdvertisementPoster = (ad, autoClose = false) => {
+    if (!document.body || !ad) return;
+    document.querySelectorAll(".ad-popup").forEach((existing) => existing.remove());
+    const popup = document.createElement("div");
+    popup.className = "ad-popup";
+    popup.setAttribute("role", "dialog");
+    popup.setAttribute("aria-modal", "true");
+    popup.setAttribute("aria-label", translateAdText("Featured local business advertisement"));
+    const image = ad.posterImage || ad.image || "image/field.webp";
+    const logo = ad.logo || "icons/icon-192.png";
+    const phone = ad.phoneNumber || translateAdText("Contact Number");
+    const websiteHref = ad.websiteLink || "advertisements.html";
+    popup.innerHTML = `
+      <div class="ad-popup-card">
+        <button class="ad-popup-close" type="button" aria-label="Close advertisement">&times;</button>
+        <div class="ad-poster-wrap">
+          <img class="ad-poster-image" src="${image}" alt="${translateAdText(ad.businessName || "Advertisement poster")}" loading="eager" decoding="async">
+          <div class="ad-poster-overlay">
+            <img class="ad-poster-logo" src="${logo}" alt="" loading="lazy" decoding="async">
+            <p class="section-tag">${translateAdText("Featured Local Business")}</p>
+            <h2>${translateAdText(ad.businessName || "Local Business")}</h2>
+            <p>${translateAdText(ad.description || "Local service provider for Nawada Parsauni and nearby areas.")}</p>
+          </div>
+        </div>
+        <div class="ad-popup-details">
+          <p><strong>${translateAdText("Contact Number")}:</strong> ${phone}</p>
+          <p><strong>${translateAdText("Address:")}</strong> ${translateAdText(ad.address || "Nawada Parsauni, Bihar")}</p>
+        </div>
+        <div class="ad-popup-actions">
+          <a class="btn btn-primary" href="${websiteHref}">${translateAdText("Learn More")}</a>
+          <button class="btn btn-outline ad-popup-close-action" type="button">${translateAdText("Close")}</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(popup);
+
+    const closePopup = () => {
+      if (!popup.isConnected) return;
+      popup.classList.add("closing");
+      setTimeout(() => popup.remove(), 320);
+    };
+
+    requestAnimationFrame(() => popup.classList.add("open"));
+    popup.querySelectorAll(".ad-popup-close, .ad-popup-close-action").forEach((button) => {
+      button.addEventListener("click", closePopup);
+    });
+    popup.addEventListener("click", (event) => {
+      if (event.target === popup) closePopup();
+    });
+    if (autoClose) setTimeout(closePopup, 5000);
+  };
+
+  const showAdvertisementPopup = (advertisements) => {
+    if (!document.body) return;
+    const featuredAds = advertisements.filter((ad) => ad.featured);
+    const pool = featuredAds.length ? featuredAds : advertisements;
+    const selected = pool[Math.floor(Math.random() * pool.length)];
+    openAdvertisementPoster(selected, true);
+  };
+
+  let loadedAdvertisements = [];
+  loadAdvertisements().then((advertisements) => {
+    loadedAdvertisements = advertisements;
+    renderAdvertisements(document.getElementById("featuredAdsGrid"), advertisements, { featuredOnly: true, limit: 6 });
+    renderAdvertisements(document.getElementById("allAdsGrid"), advertisements);
+    renderAdvertisements(document.getElementById("listingGrid"), advertisements, { limit: 6 });
+    refreshSearchableCards();
+    runSearch(searchInput instanceof HTMLInputElement ? searchInput.value : "");
+    showAdvertisementPopup(advertisements);
+  });
+
+  document.addEventListener("np:languagechange", () => {
+    if (!loadedAdvertisements.length) return;
+    renderAdvertisements(document.getElementById("featuredAdsGrid"), loadedAdvertisements, { featuredOnly: true, limit: 6 });
+    renderAdvertisements(document.getElementById("allAdsGrid"), loadedAdvertisements);
+    renderAdvertisements(document.getElementById("listingGrid"), loadedAdvertisements, { limit: 6 });
+    refreshSearchableCards();
   });
 
   document.addEventListener("click", (event) => {
